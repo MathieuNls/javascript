@@ -74,7 +74,10 @@ export const FormControlContextProvider = (props: React.PropsWithChildren<FormCo
   return <FormControlContext.Provider value={value}>{props.children}</FormControlContext.Provider>;
 };
 
-type FormFieldProviderProps = ReturnType<typeof useFormControlUtil<FieldId>>['props'];
+type FormFieldProviderProps = ReturnType<typeof useFormControlUtil<FieldId>>['props'] & {
+  hasError?: boolean;
+  isDisabled?: boolean;
+};
 
 type FormFieldContextValue = Omit<FormFieldProviderProps, 'id'> & {
   errorMessageId?: string;
@@ -87,6 +90,8 @@ export const FormFieldContextProvider = (props: React.PropsWithChildren<FormFiel
   const {
     id: propsId,
     isRequired = false,
+    isDisabled = false,
+    hasError = false,
     setError,
     setSuccessful,
     setWarning,
@@ -105,6 +110,8 @@ export const FormFieldContextProvider = (props: React.PropsWithChildren<FormFiel
   const value = React.useMemo(
     () => ({
       isRequired,
+      isDisabled,
+      hasError,
       id,
       fieldId: propsId,
       errorMessageId,
@@ -113,7 +120,7 @@ export const FormFieldContextProvider = (props: React.PropsWithChildren<FormFiel
       setWarning,
       setHasPassedComplexity,
     }),
-    [isRequired, id, errorMessageId, setError, setSuccessful, setHasPassedComplexity],
+    [isRequired, isDisabled, hasError, id, errorMessageId, setError, setSuccessful, setHasPassedComplexity],
   );
   return (
     <FormFieldContext.Provider
