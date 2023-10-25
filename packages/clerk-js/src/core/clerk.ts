@@ -1437,12 +1437,12 @@ export default class Clerk implements ClerkInterface {
     }
 
     const opts: RedirectOptions = {
-      afterSignInUrl: pickUrl('afterSignInUrl', [options, this.#options]),
-      afterSignUpUrl: pickUrl('afterSignUpUrl', [options, this.#options]),
+      afterSignInUrl: pickUrl('afterSignInUrl', { from: [options, this.#options] }),
+      afterSignUpUrl: pickUrl('afterSignUpUrl', { from: [options, this.#options] }),
       redirectUrl: options?.redirectUrl || window.location.href,
     };
 
-    const signInOrUpUrl = pickUrl(key, [this.#options, this.#environment.displayConfig]);
+    const signInOrUpUrl = pickUrl(key, { from: [this.#options, this.#environment.displayConfig] });
     return this.buildUrlWithAuth(appendAsQueryParams(signInOrUpUrl, opts));
   };
 

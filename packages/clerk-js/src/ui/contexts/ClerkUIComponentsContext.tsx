@@ -48,22 +48,44 @@ export const useSignUpContext = (): SignUpContextType => {
   }
 
   const afterSignUpUrl = clerk.buildUrlWithAuth(
-    pickUrl(['afterSignUpUrl', 'redirectUrl'], queryParams, {
-      validator: url => isAllowedRedirectOrigin(url, options.allowedRedirectOrigins),
-      formatter: camelToSnake,
-    }) || pickUrl(['afterSignUpUrl', 'redirectUrl'], [ctx, options, displayConfig]),
+    pickUrl(
+      ['afterSignUpUrl', 'redirectUrl'],
+      [
+        {
+          from: queryParams,
+          options: {
+            validator: url => isAllowedRedirectOrigin(url, options.allowedRedirectOrigins),
+            formatter: camelToSnake,
+          },
+        },
+        {
+          from: [ctx, options, displayConfig],
+        },
+      ],
+    ),
   );
 
   const afterSignInUrl = clerk.buildUrlWithAuth(
-    pickUrl(['afterSignInUrl', 'redirectUrl'], queryParams, {
-      validator: url => isAllowedRedirectOrigin(url, options.allowedRedirectOrigins),
-      formatter: camelToSnake,
-    }) || pickUrl(['afterSignInUrl', 'redirectUrl'], [ctx, options, displayConfig]),
+    pickUrl(
+      ['afterSignInUrl', 'redirectUrl'],
+      [
+        {
+          from: queryParams,
+          options: {
+            validator: url => isAllowedRedirectOrigin(url, options.allowedRedirectOrigins),
+            formatter: camelToSnake,
+          },
+        },
+        {
+          from: [ctx, options, displayConfig],
+        },
+      ],
+    ),
   );
 
   const navigateAfterSignUp = () => navigate(afterSignUpUrl);
 
-  let signInUrl = pickUrl('signInUrl', [ctx, options, displayConfig]);
+  let signInUrl = pickUrl('signInUrl', { from: [ctx, options, displayConfig] });
 
   // Add query strings to the sign in URL
   const authQs = buildAuthQueryString({
@@ -114,22 +136,44 @@ export const useSignInContext = (): SignInContextType => {
   }
 
   const afterSignUpUrl = clerk.buildUrlWithAuth(
-    pickUrl(['afterSignUpUrl', 'redirectUrl'], queryParams, {
-      validator: url => isAllowedRedirectOrigin(url, options.allowedRedirectOrigins),
-      formatter: camelToSnake,
-    }) || pickUrl(['afterSignUpUrl', 'redirectUrl'], [ctx, options, displayConfig]),
+    pickUrl(
+      ['afterSignUpUrl', 'redirectUrl'],
+      [
+        {
+          from: queryParams,
+          options: {
+            validator: url => isAllowedRedirectOrigin(url, options.allowedRedirectOrigins),
+            formatter: camelToSnake,
+          },
+        },
+        {
+          from: [ctx, options, displayConfig],
+        },
+      ],
+    ),
   );
 
   const afterSignInUrl = clerk.buildUrlWithAuth(
-    pickUrl(['afterSignInUrl', 'redirectUrl'], [queryParams], {
-      validator: url => isAllowedRedirectOrigin(url, options.allowedRedirectOrigins),
-      formatter: camelToSnake,
-    }) || pickUrl(['afterSignInUrl', 'redirectUrl'], [ctx, options, displayConfig]),
+    pickUrl(
+      ['afterSignInUrl', 'redirectUrl'],
+      [
+        {
+          from: queryParams,
+          options: {
+            validator: url => isAllowedRedirectOrigin(url, options.allowedRedirectOrigins),
+            formatter: camelToSnake,
+          },
+        },
+        {
+          from: [ctx, options, displayConfig],
+        },
+      ],
+    ),
   );
 
   const navigateAfterSignIn = () => navigate(afterSignInUrl);
 
-  let signUpUrl = pickUrl('signUpUrl', [ctx, options, displayConfig]);
+  let signUpUrl = pickUrl('signUpUrl', { from: [ctx, options, displayConfig] });
 
   // Add query strings to the sign in URL
   const authQs = buildAuthQueryString({
@@ -191,14 +235,15 @@ export const useUserButtonContext = () => {
     throw new Error('Clerk: useUserButtonContext called outside of the mounted UserButton component.');
   }
 
-  const signInUrl = pickUrl('signInUrl', [ctx, options, displayConfig]);
-  const userProfileUrl = pickUrl('userProfileUrl', [ctx, displayConfig]);
-  const afterMultiSessionSingleSignOutUrl = pickUrl(
-    ['afterMultiSessionSingleSignOutUrl', 'afterSignOutOneUrl'],
-    [ctx, displayConfig],
-  );
-  const afterSignOutUrl = pickUrl(['afterSignOutUrl', 'afterSignOutAllUrl'], [ctx, displayConfig]);
-  const afterSwitchSessionUrl = pickUrl(['afterSwitchSessionUrl', 'afterSignOutAllUrl'], [ctx, displayConfig]);
+  const signInUrl = pickUrl('signInUrl', { from: [ctx, options, displayConfig] });
+  const userProfileUrl = pickUrl('userProfileUrl', { from: [ctx, displayConfig] });
+  const afterMultiSessionSingleSignOutUrl = pickUrl(['afterMultiSessionSingleSignOutUrl', 'afterSignOutOneUrl'], {
+    from: [ctx, displayConfig],
+  });
+  const afterSignOutUrl = pickUrl(['afterSignOutUrl', 'afterSignOutAllUrl'], { from: [ctx, displayConfig] });
+  const afterSwitchSessionUrl = pickUrl(['afterSwitchSessionUrl', 'afterSignOutAllUrl'], {
+    from: [ctx, displayConfig],
+  });
 
   const navigateAfterMultiSessionSingleSignOut = () => Clerk.redirectWithAuth(afterMultiSessionSingleSignOutUrl);
   const navigateAfterSignOut = () => navigate(afterSignOutUrl);
@@ -227,10 +272,10 @@ export const useOrganizationSwitcherContext = () => {
     throw new Error('Clerk: useUserButtonContext called outside OrganizationSwitcher.');
   }
 
-  const afterCreateOrganizationUrl = pickUrl('afterCreateOrganizationUrl', [ctx, displayConfig]);
-  const afterLeaveOrganizationUrl = pickUrl('afterLeaveOrganizationUrl', [ctx, displayConfig]);
-  const createOrganizationUrl = pickUrl('createOrganizationUrl', [ctx, displayConfig]);
-  const organizationProfileUrl = pickUrl('organizationProfileUrl', [ctx, displayConfig]);
+  const afterCreateOrganizationUrl = pickUrl('afterCreateOrganizationUrl', { from: [ctx, displayConfig] });
+  const afterLeaveOrganizationUrl = pickUrl('afterLeaveOrganizationUrl', { from: [ctx, displayConfig] });
+  const createOrganizationUrl = pickUrl('createOrganizationUrl', { from: [ctx, displayConfig] });
+  const organizationProfileUrl = pickUrl('organizationProfileUrl', { from: [ctx, displayConfig] });
 
   const navigateCreateOrganization = () => navigate(createOrganizationUrl);
   const navigateOrganizationProfile = () => navigate(organizationProfileUrl);
@@ -303,7 +348,7 @@ export const useOrganizationProfileContext = () => {
     throw new Error('Clerk: useOrganizationProfileContext called outside OrganizationProfile.');
   }
 
-  const afterLeaveOrganizationUrl = pickUrl('afterLeaveOrganizationUrl', [ctx, displayConfig]);
+  const afterLeaveOrganizationUrl = pickUrl('afterLeaveOrganizationUrl', { from: [ctx, displayConfig] });
   const navigateAfterLeaveOrganization = () => navigate(afterLeaveOrganizationUrl);
 
   return {
